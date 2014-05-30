@@ -33,15 +33,18 @@ It should be ignored after deployment.
 
        plans = service.plans
        if plans
-         raise "Service property 'plans' must be empty or an array of one plan" unless plans.is_a?(Array) && plans.length == 1
+         raise "Service property 'plans' must be empty or an array of at least one plan" unless plans.is_a?(Array) && plans.length >= 1
 
-         plan = plans[0]
-         raise "Plan must have property 'id'" unless plan.id
-         raise "Plan must have property 'name'" unless plan.name
-         raise "Plan must have property 'description'" unless plan.description
-         raise "Plan must have integer property 'max_storage_mb'" unless plan.max_storage_mb && is_number(plan.max_storage_mb)
+         plans.each_with_index do |plan, index|
+           raise "Plan ##{index} must have property 'id'" unless plan.id
 
-         raise "Plan property 'metadata' must be empty or a hash" if plan.metadata && !plan.metadata.is_a?(OpenStruct)
+           id = plan.id
+           raise "Plan with id #{id} must have property 'name'" unless plan.name
+           raise "Plan with id #{id} must have property 'description'" unless plan.description
+           raise "Plan with id #{id} must have integer property 'max_storage_mb'" unless plan.max_storage_mb && is_number(plan.max_storage_mb)
+
+           raise "Property 'metadata' for plan with id #{id} must be empty or a hash" if plan.metadata && !plan.metadata.is_a?(OpenStruct)
+         end
        end
      end
    rescue => e
