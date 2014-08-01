@@ -50,6 +50,20 @@ var _ = Describe("MariadbStartManager", func() {
 		Expect(callExists).To(BeTrue())
 	}
 
+	ensureUpgradeScriptWasNotRun := func() {
+		callCount := fake.RunCommandCallCount()
+		callExists := false
+
+		for i := 0; i < callCount; i++ {
+			executable, args := fake.RunCommandArgsForCall(i)
+
+			if executable == "bash" && len(args) > 0 && args[0] == upgradeScriptPath {
+				callExists = true
+			}
+		}
+		Expect(callExists).To(BeFalse())
+	}
+
 	ensureSeedDatabases := func() {
 		callCount := fake.RunCommandCallCount()
 
@@ -116,7 +130,6 @@ var _ = Describe("MariadbStartManager", func() {
 	})
 
 	Describe("When starting in single-node deployment", func() {
-
 		BeforeEach(func() {
 			fake = new(fakes.FakeOsHelper)
 
@@ -173,9 +186,7 @@ var _ = Describe("MariadbStartManager", func() {
 	})
 
 	Describe("Execute on node >0", func() {
-
 		BeforeEach(func() {
-
 			fake = new(fakes.FakeOsHelper)
 
 			mgr = manager.New(
@@ -190,66 +201,31 @@ var _ = Describe("MariadbStartManager", func() {
 				upgradeScriptPath)
 		})
 
-		Context("When the node needs to restart after upgrade", func() {
-			It("Should start up in join mode, writes JOIN to a file, runs upgrade, stops mysql", func() {
-				mgr.Execute()
-				ensureMySQLCommandsRanWithOptions([]string{"start", "stop", "start"})
-				ensureStateFileContentIs("JOIN")
-				ensureUpgrade()
-			})
-			Context("When starting mariadb causes an error", func() {
-				It("Panics", func() {
-					fake.RunCommandWithTimeoutStub = func(arg0 int, arg1 string, arg2 string, arg3 ...string) error {
-						return errors.New("some error")
-					}
-					Expect(func() {
-						mgr.Execute()
-					}).To(Panic())
-				})
-			})
-			Context("When stopping mariadb causes an error", func() {
-				It("Panics", func() {
-					fake.RunCommandWithTimeoutStub = func(arg0 int, arg1 string, arg2 string, arg3 ...string) error {
-						if arg3[1] == "stop" {
-							return errors.New("some errors")
-						} else {
-							return nil
-						}
-					}
-					Expect(func() {
-						mgr.Execute()
-					}).To(Panic())
-				})
-			})
+		It("Should start up in join mode and write JOIN to a file", func() {
+			mgr.Execute()
+			ensureMySQLCommandsRanWithOptions([]string{"start"})
+			ensureStateFileContentIs("JOIN")
 		})
 
-		Context("When the node does NOT need to restart after upgrade", func() {
-			BeforeEach(func() {
-				fakeRestartNOTNeededAfterUpgrade()
-			})
-			It("Should start up in join mode, writes JOIN to a file, runs upgrade", func() {
-				mgr.Execute()
-				ensureMySQLCommandsRanWithOptions([]string{"start"})
-				ensureStateFileContentIs("JOIN")
-				ensureUpgrade()
-			})
-			Context("When starting mariadb causes an error", func() {
-				It("Panics", func() {
-					fake.RunCommandWithTimeoutStub = func(arg0 int, arg1 string, arg2 string, arg3 ...string) error {
-						return errors.New("some error")
-					}
-					Expect(func() {
-						mgr.Execute()
-					}).To(Panic())
-				})
+		It("Does not run the upgrade command", func() {
+			mgr.Execute()
+			ensureUpgradeScriptWasNotRun()
+		})
+
+		Context("When starting mariadb causes an error", func() {
+			It("Panics", func() {
+				fake.RunCommandWithTimeoutStub = func(arg0 int, arg1 string, arg2 string, arg3 ...string) error {
+					return errors.New("some error")
+				}
+				Expect(func() {
+					mgr.Execute()
+				}).To(Panic())
 			})
 		})
 	})
 
 	Describe("Execute on node 0", func() {
-
 		BeforeEach(func() {
-
 			fake = new(fakes.FakeOsHelper)
 
 			mgr = manager.New(

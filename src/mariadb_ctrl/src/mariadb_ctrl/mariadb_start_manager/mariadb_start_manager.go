@@ -53,9 +53,10 @@ func (m *MariaDBStartManager) log(info string) {
 }
 
 func (m *MariaDBStartManager) Execute() {
-	//We should NEVER bootstrap unless we are Index 0
-	if m.jobIndex == 0 {
+	isFirstNode := (0 == m.jobIndex)
 
+	//We should NEVER bootstrap unless we are Index 0
+	if isFirstNode {
 		//single-node deploy
 		if m.numberOfNodes == 1 {
 			m.log("Single node deploy")
@@ -83,7 +84,7 @@ func (m *MariaDBStartManager) Execute() {
 		}
 	}
 
-	m.joinCluster()
+	m.joinCluster(isFirstNode)
 }
 
 func (m *MariaDBStartManager) bootstrapUpgradeAndWriteState(state string) {
@@ -102,7 +103,7 @@ func (m *MariaDBStartManager) bootstrapAndWriteState(state string) {
 	}
 }
 
-func (m *MariaDBStartManager) joinCluster() {
+func (m *MariaDBStartManager) joinCluster(performUpgrade bool) {
 	m.log("starting in join\n")
 	err := m.osHelper.RunCommandWithTimeout(300, m.logFileLocation, "bash", m.mysqlServerPath, "start")
 	if err != nil {
@@ -110,7 +111,9 @@ func (m *MariaDBStartManager) joinCluster() {
 	}
 
 	m.seedDatabases()
-	m.upgradeAndRestartIfNecessary("start")
+	if performUpgrade {
+		m.upgradeAndRestartIfNecessary("start")
+	}
 
 	m.log("updating file with contents: JOIN\n")
 	m.osHelper.WriteStringToFile(m.stateFileLocation, "JOIN")
