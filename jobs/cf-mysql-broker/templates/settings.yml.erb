@@ -21,6 +21,15 @@ production:
   ib_log_file_size: <%= p('mysql_node.ib_log_file_size')%>
   gcache_size: <%= p('mysql_node.gcache_size')%>
 
+  <% if_p("datacentre_info") do %>
+  datacentre_info:
+  <% (properties.datacentre_info || []).each do |datacentre_info| %>
+  - name: <%= datacentre_info.name %>
+    host: <%= datacentre_info.host %>
+    port: <%= datacentre_info.port %>
+  <% end %>
+  <% end %>
+
   services:
   <% (properties.services || []).each do |service| %>
   - id: <%= service.id %>

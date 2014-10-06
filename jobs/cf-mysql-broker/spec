@@ -49,6 +49,9 @@ properties:
     description: 'number of user connections to allow in a plan if not specified'
     default: 40
 
+  datacentre_info:
+    description: 'Datacentre info for multi dc setup'
+
   services:
     description: 'Services and plans offered by the broker'
 
