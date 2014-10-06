@@ -23,10 +23,10 @@ nice      = 0
 [mysqld]
 # GALERA options:
 wsrep_provider=/var/vcap/packages/mariadb/lib/plugin/libgalera_smm.so
-wsrep_provider_options="gcache.size=<%= p('gcache_size') %>M"
+wsrep_provider_options="gcache.size=<%= p('gcache_size') %>M; gmcast.segment=<%= p('gmcast_segment') %>"
 wsrep_cluster_address="gcomm://<%= p('cluster_ips').join(",") %>"
 wsrep_node_address='<%= spec.networks.send(p('network_name')).ip %>'
-wsrep_node_name='mysql/<%= index %>'
+wsrep_node_name='<%= p('cluster_name_prefix') %>/<%= index %>'
 wsrep_cluster_name='cf-mariadb-galera-cluster'
 wsrep_sst_method=rsync
 
