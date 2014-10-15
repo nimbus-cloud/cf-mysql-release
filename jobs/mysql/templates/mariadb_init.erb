@@ -11,3 +11,5 @@ INSERT IGNORE INTO mysql.user SET Host='<%= haproxy_ip %>', User='<%= properties
 FLUSH PRIVILEGES;
 
 DROP DATABASE IF EXISTS test;
+
+SET GLOBAL log_bin_trust_function_creators = 1;
