@@ -50,6 +50,9 @@ case $1 in
 
     cd $package_dir
 
+    chmod 755 $MARIADB_JOB_DIR/bin/mariadb_backup
+    $MARIADB_JOB_DIR/bin/mariadb_backup start
+
     <% node_ip = spec.networks.send(p('network_name')).ip %>
 
     $package_dir/$executable_name \
@@ -76,6 +79,7 @@ case $1 in
     date >> $LOG_FILE 2>> $LOG_FILE
     log "Stopping node $JOB_INDEX" >> $LOG_FILE
     /var/vcap/packages/mariadb/support-files/mysql.server stop >> $LOG_FILE 2>> $LOG_FILE
+    $MARIADB_JOB_DIR/bin/mariadb_backup stop
 
     log "Stopping mariadb_ctrl... done"
     ;;

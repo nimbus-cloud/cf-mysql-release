@@ -1,0 +1,40 @@
+#!/bin/bash
+<%
+node = properties.mysql
+backup_enabled = properties.backups && properties.backups.enable
+nfs_server = properties.backups && properties.backups.nfs_server
+first_node_only = backup_enabled && properties.backups.first_node_only
+%>
+
+<% if backup_enabled && nfs_server && (!first_node_only || spec.index == 0) %>
+PIDFILE=/var/vcap/sys/run/mysql/mysql_backup.pid
+MOUNT_POINT=<%= properties.backups.mount_point || "/var/vcap/services_backup" %>
+MT_OPTS="-t nfs"
+MT_EXPORT=<%= nfs_server.address %>:<%= nfs_server.export_dir %>
+
+source /var/vcap/jobs/mysql/bin/utils.sh
+
+case $1 in
+  start)
+    mkdir -p $MOUNT_POINT
+    check_mount "$MT_OPTS" "$MT_EXPORT" "$MOUNT_POINT"
+    (crontab -l | sed /maridb_backup/d; cat /var/vcap/jobs/mysql/config/mariadb_backup.cron) | sed /^$/d | crontab
+
+    ;;
+
+  stop)
+    crontab -l | sed /mariadb_backup/d | crontab
+    kill_and_wait $PIDFILE
+    umount $MOUNT_POINT
+
+    ;;
+
+  *)
+    echo "Usage: mysql_backup {start|stop}"
+
+    ;;
+
+esac
+<% else %>
+echo "Backup is disabled"
+<% end %>
