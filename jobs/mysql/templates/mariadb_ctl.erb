@@ -47,6 +47,8 @@ case $1 in
              --datadir=${datadir} >> $LOG_FILE 2>> $LOG_FILE
     fi
     chown -R vcap:vcap ${datadir}
+    mkdir -p /var/vcap/data/tmp/mysql
+    chown -R vcap:vcap /var/vcap/data/tmp/mysql
 
     cd $package_dir
 
