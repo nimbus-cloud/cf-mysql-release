@@ -10,6 +10,10 @@ templates:
   gra-log-purger.sh.erb: bin/gra-log-purger.sh
   mysql_database_seed.sh.erb: bin/mysql_database_seed.sh
   syslog_forwarder.conf.erb: config/syslog_forwarder.conf
+  mariadb_backup.cron.erb: config/mariadb_backup.cron
+  mariadb_backup.erb: bin/mariadb_backup  
+  mariadb_backup.sh.erb: bin/mariadb_backup.sh
+  utils.sh: bin/utils.sh
 
 packages:
 - mariadb
@@ -71,3 +75,16 @@ properties:
   syslog_aggregator.transport:
     description: "Transport to be used when forwarding logs (tcp|udp|relp)."
     default: "tcp"
+
+  backups.enable:
+    default: false
+  backups.first_node_only:
+    default: true
+  backups.cron_interval:
+    default: 0 7 * * *
+  backups.retention_days:
+    default: 30
+  backups.nfs_server.address:
+    description: NFS server address to use for backup
+  backups.nfs_server.export_dir:
+    description: NFS server export dir for backups
