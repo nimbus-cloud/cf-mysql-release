@@ -6,10 +6,9 @@ export BACKUP_DIR="/var/vcap/services_backup/l2-mysql/<%= properties.cluster_nam
 export TIMESTAMP=`date +%Y%m%d-%H%M`
 export MARIADB_BIN=/var/vcap/packages/mariadb/bin/
 
-mkdir -p $BACKUP_DIR/$TIMESTAMP
-
 $MARIADB_BIN/mysql -uroot --password=<%= admin_pwd %> -e 'show databases' --skip-column-names -B | while read dbname; do 
-BACKUP_PATH=$BACKUP_DIR/db_backup_${dbname}.sql.gz 
+mkdir -p $BACKUP_DIR/$dbname
+BACKUP_PATH=$BACKUP_DIR/${dbname}/$TIMESTAMP.sql.gz 
 $MARIADB_BIN/mysqldump -uroot --password=<%= admin_pwd %> --complete-insert --single-transaction --lock-tables=false --default_character_set=utf8 "$dbname" | gzip --fast > "$BACKUP_PATH"
 done
 
