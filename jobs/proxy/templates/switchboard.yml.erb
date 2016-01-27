@@ -1,0 +1,20 @@
+"API":
+  "Port": <%= p('proxy.api_port') %>
+  "ForceHttps": <%= p('proxy.api_force_https') %>
+  "Username": <%= p('proxy.api_username') %>
+  "Password": <%= p('proxy.api_password') %>
+"Proxy":
+  "Port": <%= p('proxy.port') %>
+  "HealthcheckTimeoutMillis": <%= p("proxy.healthcheck_timeout_millis") %>
+  "Backends":
+  <% p('cluster_ips').each_with_index do |ip, n| %>
+  - "Host": <%= ip %>
+    "Port": 3306
+    "StatusPort": 9200
+    "StatusEndpoint": "galera_status"
+    "Name": "backend-<%= n %>"
+  <% end %>
+"HealthPort": <%= p('proxy.health_port') %>
+"ProfilerPort": 6060
+"StaticDir": "/var/vcap/packages/switchboard/static"
+"PidFile": "/var/vcap/sys/run/proxy/switchboard.pid"

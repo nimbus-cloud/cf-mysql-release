@@ -1,0 +1,19 @@
+---
+name: bootstrap
+packages:
+  - bootstrap
+templates:
+  errand.sh.erb: bin/run
+  config.yml.erb: config/config.yml
+properties:
+  healthcheck_port:
+    description: 'Port used by healthcheck process to listen on'
+    default: 9200
+  cluster_ips:
+    description: 'IP addresses of all MySQL nodes'
+  database_startup_timeout:
+    description: 'Maximum time to transition to or from a stopped or started state before we timeout.'
+  bootstrap_endpoint.username:
+    description: 'Username used to contact the bootstrap endpoints via Basic Auth'
+  bootstrap_endpoint.password:
+    description: 'Password used to contact the bootstrap endpoints via Basic Auth'

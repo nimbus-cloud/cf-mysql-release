@@ -1,11 +1,10 @@
 #!/bin/bash -e
 
-job_dir=/var/vcap/jobs/galera-healthcheck
+job_dir=/var/vcap/jobs/mysql
 run_dir=/var/vcap/sys/run/galera-healthcheck
 log_dir=/var/vcap/sys/log/galera-healthcheck
 package_dir=/var/vcap/packages/galera-healthcheck
 pidfile=$run_dir/galera-healthcheck.pid
-executable_name=galera-healthcheck-executable
 
 export GOROOT=/var/vcap/packages/golang
 export PATH=$GOROOT/bin:$PWD/bin:$PATH
@@ -23,13 +22,8 @@ case $1 in
 
     cd $package_dir
 
-    $package_dir/$executable_name \
-      -port=9200 \
-      -user=<%= p('admin_username')%> \
-      -password=<%= p('admin_password')%> \
-      -pidfile=$pidfile \
-      -haproxyIp=<%= p('haproxy_ips')[0] %> \
-      -connectionCutterPath=/var/vcap/packages/galera-healthcheck/execute.sh \
+    $package_dir/bin/galera-healthcheck \
+      -configPath=$job_dir/config/galera_healthcheck_config.yaml \
       >>$log_dir/galera-healthcheck.stdout.log 2>>$log_dir/galera-healthcheck.stderr.log &
 
     log "Starting galera-healthcheck... done"

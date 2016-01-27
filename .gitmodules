@@ -7,15 +7,110 @@
 [submodule "packages/ruby"]
 	path = packages/ruby
 	url = https://github.com/cloudfoundry/ruby.git
-[submodule "src/broker-registrar"]
-	path = src/broker-registrar
-	url = https://github.com/pivotal-cf/broker-registrar.git
-[submodule "src/galera-healthcheck/src/github.com/cloudfoundry-incubator/galera-healthcheck"]
-	path = src/galera-healthcheck/src/github.com/cloudfoundry-incubator/galera-healthcheck
+[submodule "src/github.com/cloudfoundry-incubator/galera-healthcheck"]
+	path = src/github.com/cloudfoundry-incubator/galera-healthcheck
 	url = https://github.com/cloudfoundry-incubator/galera-healthcheck.git
-[submodule "src/route-registrar/src/github.com/cloudfoundry-incubator/route-registrar"]
-	path = src/route-registrar/src/github.com/cloudfoundry-incubator/route-registrar
-	url = https://github.com/cloudfoundry-incubator/route-registrar.git
-[submodule "src/mariadb_ctrl/src/github.com/cloudfoundry/mariadb_ctrl"]
-	path = src/mariadb_ctrl/src/github.com/cloudfoundry/mariadb_ctrl
+	branch = master
+[submodule "src/github.com/cloudfoundry/mariadb_ctrl"]
+	path = src/github.com/cloudfoundry/mariadb_ctrl
 	url = https://github.com/cloudfoundry/mariadb_ctrl.git
+	branch = master
+[submodule "src/github.com/cloudfoundry-incubator/route-registrar"]
+	path = src/github.com/cloudfoundry-incubator/route-registrar
+	url = https://github.com/cloudfoundry-incubator/route-registrar.git
+[submodule "src/github.com/cloudfoundry-incubator/switchboard"]
+	path = src/github.com/cloudfoundry-incubator/switchboard
+	url = https://github.com/cloudfoundry-incubator/switchboard
+	branch = master
+[submodule "src/github.com/onsi/ginkgo"]
+	path = src/github.com/onsi/ginkgo
+	url = https://github.com/onsi/ginkgo
+	branch = master
+[submodule "src/github.com/cloudfoundry-incubator/cf-test-helpers"]
+	path = src/github.com/cloudfoundry-incubator/cf-test-helpers
+	url = https://github.com/cloudfoundry-incubator/cf-test-helpers
+	branch = master
+[submodule "src/github.com/sclevine/agouti"]
+	path = src/github.com/sclevine/agouti
+	url = https://github.com/sclevine/agouti
+	branch = master
+[submodule "src/github.com/nu7hatch/gouuid"]
+	path = src/github.com/nu7hatch/gouuid
+	url = https://github.com/nu7hatch/gouuid
+	branch = master
+[submodule "src/github.com/onsi/gomega"]
+	path = src/github.com/onsi/gomega
+	url = https://github.com/onsi/gomega
+	branch = master
+[submodule "src/golang.org/x/crypto"]
+	path = src/golang.org/x/crypto
+	url = https://go.googlesource.com/crypto
+	branch = master
+[submodule "src/github.com/go-sql-driver/mysql"]
+	path = src/github.com/go-sql-driver/mysql
+	url = https://github.com/go-sql-driver/mysql
+	branch = master
+[submodule "src/github.com/erikstmartin/go-testdb"]
+	path = src/github.com/erikstmartin/go-testdb
+	url = https://github.com/erikstmartin/go-testdb
+	branch = master
+[submodule "src/github.com/cloudfoundry-incubator/cf-lager"]
+	path = src/github.com/cloudfoundry-incubator/cf-lager
+	url = https://github.com/cloudfoundry-incubator/cf-lager
+	branch = master
+[submodule "src/gopkg.in/validator.v2"]
+	path = src/gopkg.in/validator.v2
+	url = https://gopkg.in/validator.v2
+	branch = master
+[submodule "src/github.com/pivotal-golang/lager"]
+	path = src/github.com/pivotal-golang/lager
+	url = https://github.com/pivotal-golang/lager
+	branch = master
+[submodule "src/github.com/tedsuo/ifrit"]
+	path = src/github.com/tedsuo/ifrit
+	url = https://github.com/tedsuo/ifrit
+	branch = master
+[submodule "src/github.com/fraenkel/candiedyaml"]
+	path = src/github.com/fraenkel/candiedyaml
+	url = https://github.com/fraenkel/candiedyaml
+	branch = master
+[submodule "src/github.com/cloudfoundry-incubator/cf-mysql-acceptance-tests"]
+	path = src/github.com/cloudfoundry-incubator/cf-mysql-acceptance-tests
+	url = https://github.com/cloudfoundry-incubator/cf-mysql-acceptance-tests.git
+	branch = master
+[submodule "src/github.com/pivotal-cf-experimental/cf-mysql-quota-enforcer"]
+	path = src/github.com/pivotal-cf-experimental/cf-mysql-quota-enforcer
+	url = https://github.com/pivotal-cf-experimental/cf-mysql-quota-enforcer.git
+[submodule "src/github.com/DATA-DOG/go-sqlmock"]
+	path = src/github.com/DATA-DOG/go-sqlmock
+	url = https://github.com/DATA-DOG/go-sqlmock
+[submodule "src/github.com/pivotal-cf-experimental/service-config"]
+	path = src/github.com/pivotal-cf-experimental/service-config
+	url = https://github.com/pivotal-cf-experimental/service-config
+	branch = master
+[submodule "src/github.com/cloudfoundry-incubator/candiedyaml"]
+	path = src/github.com/cloudfoundry-incubator/candiedyaml
+	url = https://github.com/cloudfoundry-incubator/candiedyaml
+[submodule "src/github.com/imdario/mergo"]
+	path = src/github.com/imdario/mergo
+	url = https://github.com/imdario/mergo
+[submodule "src/golang.org/x/net"]
+	path = src/golang.org/x/net
+	url = https://go.googlesource.com/net
+	branch = master
+[submodule "src/golang.org/x/text"]
+	path = src/golang.org/x/text
+	url = https://go.googlesource.com/text
+	branch = master
+[submodule "src/github.com/cloudfoundry-incubator/cf-mysql-bootstrap"]
+	path = src/github.com/cloudfoundry-incubator/cf-mysql-bootstrap
+	url = https://github.com/cloudfoundry-incubator/cf-mysql-bootstrap
+	branch = master
+[submodule "src/github.com/tedsuo/rata"]
+	path = src/github.com/tedsuo/rata
+	url = https://github.com/tedsuo/rata
+	branch = master
+[submodule "src/github.com/bmizerany/pat"]
+	path = src/github.com/bmizerany/pat
+	url = https://github.com/bmizerany/pat
+	branch = master

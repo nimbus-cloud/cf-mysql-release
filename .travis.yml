@@ -1,0 +1,19 @@
+sudo: false
+language: go
+
+go:
+  - 1.4.2
+
+before_install:
+  - export GOPATH=$PWD
+  - export PATH=$GOPATH/bin:$PATH
+
+install:
+  - git submodule update --init --recursive
+
+script:
+  - ./scripts/test-unit -nodes=2
+
+branches:
+  only:
+    - develop

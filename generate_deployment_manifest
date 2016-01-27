@@ -1,10 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 
-templates=$(dirname $0)/templates
+MY_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-infrastructure=$1
+templates="${MY_DIR}/templates"
 
-shift
+infrastructure="$1"
 
 if [ "$infrastructure" != "aws" ] && \
     [ "$infrastructure" != "warden" ] && \
@@ -13,7 +13,9 @@ if [ "$infrastructure" != "aws" ] && \
   exit 1
 fi
 
+shift
+
 spiff merge \
-  $templates/cf-mysql-template.yml \
-  $templates/cf-infrastructure-${infrastructure}.yml \
+  "$templates/cf-mysql-template.yml" \
+  "$templates/cf-infrastructure-${infrastructure}.yml" \
   $*
