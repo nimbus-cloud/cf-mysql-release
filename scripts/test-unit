@@ -1,29 +1,65 @@
 #!/bin/bash
 
-set -eux
+set -eu
 
 MY_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # This script assumes that it lives one directory below the release directory.
-RELEASE_DIR="$( cd $MY_DIR/.. && pwd )"
+RELEASE_DIR="$( cd "${MY_DIR}/.." && pwd )"
 
-source ${RELEASE_DIR}/.envrc
+function verify_config_file_updated_with_tests() {
+  pushd "${RELEASE_DIR}/jobs/mysql/templates" > /dev/null
+    oldsha=$(cat my.cnf.erb.shasum)
+    newsha=$(shasum my.cnf.erb | awk '{print $1}')
+
+    if [ "$oldsha" != "$newsha" ]; then
+      echo -e "\n\nDetected my.cnf.erb change without sha being updated"
+      echo "Did you update my.cnf.erb without updating the tuning tests?"
+      echo "Please update the tests and then run 'shasum my.cnf.erb | awk '{print \$1}' > my.cnf.erb.shasum'"
+      exit 1
+    fi
+  popd > /dev/null
+}
+
+echo -e "\n>>>>>>>> Verifying shasum of my.cnf.erb..."
+verify_config_file_updated_with_tests
+
+# shellcheck source=/dev/null
+source "${RELEASE_DIR}/.envrc"
+
+echo -e "\n>>>>>>>> Testing our bash scripts fatally..."
+# Custom shellcheck exclusions
+shellcheck --shell=bash "${RELEASE_DIR}/scripts/download-logs"
+
+echo -e "\n>>>>>>>> Testing the rest of our bash scripts..."
+# Things we have yet to address
+pushd "${RELEASE_DIR}"
+set +e
+egrep -lR '#!/bin/bash|#!/usr/bin/env bash' scripts src | \
+  egrep -v "(scripts/download-logs|scripts/test-unit|scripts/test-sample-stubs)" | \
+  xargs shellcheck --shell=bash
+set -e
+popd
 
 # Remove and reinstall the ginkgo binary as it might be from the wrong target architecture
-rm -rf ${RELEASE_DIR}/bin/ginkgo
+rm -rf "${RELEASE_DIR}/bin/ginkgo"
 go install -v github.com/onsi/ginkgo/ginkgo
+go get github.com/maxbrunsfeld/counterfeiter
 
-echo -e "\nTesting Switchboard..."
-${RELEASE_DIR}/src/github.com/cloudfoundry-incubator/switchboard/bin/test "$@"
+echo -e "\n>>>>>>>> Testing Switchboard..."
+"${RELEASE_DIR}/src/github.com/cloudfoundry-incubator/switchboard/bin/test" "$@"
 
-echo -e "\nTesting Galera Healthcheck..."
-${RELEASE_DIR}/src/github.com/cloudfoundry-incubator/galera-healthcheck/bin/test "$@"
+echo -e "\n>>>>>>>> Testing Galera Healthcheck..."
+"${RELEASE_DIR}/src/github.com/cloudfoundry-incubator/galera-healthcheck/bin/test" "$@"
 
-echo -e "\nTesting MariaDB Control..."
-${RELEASE_DIR}/src/github.com/cloudfoundry/mariadb_ctrl/bin/test-unit "$@"
+echo -e "\n>>>>>>>> Testing MariaDB Control..."
+"${RELEASE_DIR}/src/github.com/cloudfoundry/mariadb_ctrl/bin/test-unit" "$@"
 
-echo -e "\nTesting Quota Enforcer..."
-${RELEASE_DIR}/src/github.com/pivotal-cf-experimental/cf-mysql-quota-enforcer/bin/test-unit "$@"
+echo -e "\n>>>>>>>> Testing Quota Enforcer..."
+"${RELEASE_DIR}/src/quota-enforcer/bin/test-unit" "$@"
 
-echo -e "\nTesting Bootstrapper..."
-${RELEASE_DIR}/src/github.com/cloudfoundry-incubator/cf-mysql-bootstrap/bin/test "$@"
+echo -e "\n>>>>>>>> Testing Bootstrapper..."
+"${RELEASE_DIR}/src/github.com/cloudfoundry-incubator/cf-mysql-bootstrap/bin/test" "$@"
+
+echo -e "\n>>>>>>>> Testing Cluster Health Logger..."
+"${RELEASE_DIR}/src/github.com/cloudfoundry-incubator/cf-mysql-cluster-health-logger/bin/test" "$@"

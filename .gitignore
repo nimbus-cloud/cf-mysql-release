@@ -21,9 +21,15 @@ releases/**/*.tgz
 *#
 #*
 *config.json
-bin/
 pkg/
 src/github.com/cloudfoundry-incubator/spiff/
 src/github.com/vito/gosub/
 src/github.com/codegangsta/cli/
 *.iml
+src/quota-enforcer/config.yml
+src/quota-enforcer/config.yaml
+src/quota-enforcer/config.json
+src/quota-enforcer/tmp/
+src/quota-enforcer/**/*.test
+src/quota-enforcer/out/*
+
