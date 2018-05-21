@@ -1,6 +1,43 @@
----
-Host: <%= p('mysql_node.host') %>
-Port: <%= p('mysql_node.port') %>
-User: <%= p('mysql_node.admin_username') %>
-Password: <%= p('mysql_node.admin_password') %>
-DBName: mysql_broker
+<%=
+  disable_quota_enforcer = p('cf_mysql.broker.disable_quota_enforcer')
+
+  password = ""
+  if_p('cf_mysql.broker.quota_enforcer.password') do |quota_enforcer_password|
+    password = quota_enforcer_password
+  end
+
+  raise('cf_mysql.broker.quota_enforcer.password must be provided') if password.empty? && !disable_quota_enforcer
+
+  ignored_users = p('cf_mysql.broker.quota_enforcer.ignored_users')
+  ignored_users << 'roadmin'
+
+  db_port = nil
+  if_link('proxy') do |proxy|
+    db_port = proxy.p('cf_mysql.proxy.port')
+  end.else do
+    db_port = link('mysql').p('cf_mysql.mysql.port')
+  end
+
+  db_host = nil
+  if_p('cf_mysql.host') do |host|
+    db_host = host
+  end.else do
+    if_link('proxy') do |proxy|
+      db_host = proxy.instances.first.address
+    end.else do
+      db_host = link('mysql').instances.first.address
+    end
+  end
+
+  config = {
+    Host: db_host,
+    Port: db_port,
+    User: "quota-enforcer",
+    Password: password,
+    DBName: "mysql_broker",
+    IgnoredUsers: ignored_users.uniq,
+    PauseInSeconds: p('cf_mysql.broker.quota_enforcer.pause')
+  }
+
+  JSON.pretty_generate(config)
+%>

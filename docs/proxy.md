@@ -43,38 +43,55 @@ When a new node is added to the cluster or rejoins the cluster, it synchronizes 
 
 If the operator sets the total number of proxies to 0 hosts in their manifest, then applications will start routing connections directly to one healthy MariaDB node making that node a single point of failure for the cluster.
 
-The recommended number of proxies are 2; this provides redundancy should one of the proxies fail.
+The recommended number of proxies is 2; this provides redundancy should one of the proxies fail.
 
-## Removing the proxy as a SPOF
+## Setting a load balancer in front of the proxies
 
 The proxy tier is responsible for routing connections from applications to healthy MariaDB cluster nodes, even in the event of node failure.
 
 Bound applications are provided with a hostname or IP address to reach a database managed by the service. By default, the MySQL service will provide bound applications with the IP of the first instance in the proxy tier. Even if additional proxy instances are deployed, client connections will not be routed through them. This means the first proxy instance is a single point of failure.
 
-**In order to eliminate the first proxy instance as a single point of failure, operators must configure a load balancer to route client connections to all proxy IPs, and configure the MySQL service to give bound applications a hostname or IP address that resolves to the load balancer.**
+**In order to eliminate the first proxy instance as a single point of failure, operators have two options:**
+  * Configure [Consul](http://consul.io)<sup>[[1]](#configuring-consul)</sup> for service discovery.
+  * Configure a load balancer<sup>[[2]](#configuring-load-balancer)</sup> to route client connections to all proxy IPs, and configure the MySQL service<sup>[[3]](#configuring-cf-mysql-release-to-give-applications-the-address-of-the-load-balancer)</sup> to give bound applications a hostname or IP address that resolves to the load balancer.
+
+*Note: To use MySQL as a bindable service on Cloud Foundry the operator must configure a load balancer, Consul will not be acceessible from applications.*
 
 ### Configuring load balancer
 
-Configure the load balancer to route traffic for TCP port 3306 to the IPs of all proxy instances on TCP port 3306. Next, configure the load balancer's healthcheck to use the proxy health port. This is TCP port 1936 by default to maintain backwards compatibility with previous releases, but this port can be configured by changing the following manifest property:
+Configure the load balancer to route traffic for TCP port 3306 to the IPs of all proxy instances on TCP port 3306.
+
+Next, configure the load balancer's healthcheck to use the proxy health port.
+The proxies have an HTTP server listening on the health port. It returns 200 in all cases and for all endpoints. This can be used to configure a Load Balancer that requires HTTP healthchecks.
+
+Because HTTP uses TCP connections, the port also accepts TCP requests, useful for configuring a Load Balancer with a TCP healthcheck.
+
+By default, the health port is 1936 to maintain backwards compatibility with previous releases, but this port can be configured by adding the `cf_mysql.proxy.health_port` manifest property to the proxy job and deploying.
+
+Add an entry to your [cloud config](https://bosh.io/docs/cloud-config.html) defining a [vm_extension](https://bosh.io/docs/cloud-config.html#vm-extensions) that receives load balanced traffic.
+This can be accomplished by including IaaS-specific cloud properties that define a load-balanced VM.
 
 ```
-jobs:
-- name: proxy_z1
-  properties:
-    proxy:
-      health_port: <port>
+vm_extensions:
+- name: load_balancer_for_mysql_proxy
+  cloud_properties:
+    ...    
 ```
+
+You'll need to consult your IaaS documentation as well as your BOSH CPI documentation for the specifics of the `cloud_properties` definitions to use in your `vm_extension`. 
+
+Next, you'll need to configure your proxy to use the vm_extension by setting the proxy's `vm_extensions` property to an array including the name of your load balancing vm_extension:
+
+```
+instance_groups:
+- name: proxy
+  vm_extensions:
+  - load_balancer_for_mysql_proxy
+```
+
 
 ### Configuring cf-mysql-release to give applications the address of the load balancer
-To ensure that bound applications will use the load balancer to reach bound databases, the manifest property `properties.mysql_node.host` must be updated for the cf-mysql-broker job:
-
-```
-jobs:
-- name: cf-mysql-broker_z1
-  properties:
-    mysql_node:
-      host: <load balancer address>
-```
+To ensure that bound applications will use the load balancer to reach bound databases, set `cf_mysql.host` in the cf-mysql-broker job to your load balancer's IP.
 
 ### AWS Route 53
 
@@ -91,9 +108,19 @@ follow the following instructions:
 
 Finally, update the manifest property `properties.mysql_node.host` for the cf-mysql-broker job, as described above.
 
+### Configuring Consul
+
+The Consul server is deployed with [cf-release](https://github.com/cloudfoundry/cf-release), if your deployment does not include cf-release you can use [consul-release](https://github.com/cloudfoundry-incubator/consul-release) to deploy a standalone Consul cluster.
+
+To configure service discovery for the proxies, you need to colocate the consul agent with each Proxy and specify some Consul-specific properties.
+
+#### Colocate the Consul-Agent Job
+
+To colocate the agent with the proxy, use the [proxy-consul](https://github.com/cloudfoundry/cf-mysql-deployment/blob/master/operations/proxy-consul.yml) operations file
+
 ## API
 
-The proxy hosts a JSON API at `proxy-<bosh job index>-p-mysql.<system domain>/v0/`.
+The proxy hosts a JSON API at `<bosh job index>-proxy-p-mysql.<system domain>/v0/`.
 
 The API provides the following route:
 
@@ -133,4 +160,6 @@ Response:
 
 ## Dashboard
 
-The proxy also provides a Dashboard UI to view the current status of the database nodes. This is hosted at `proxy-<bosh job index>-p-mysql.<system domain>`.
+The proxy also provides a Dashboard UI to view the current status of the database nodes. This is hosted at `<bosh job index>-proxy-p-mysql.<system domain>`.
+
+The Proxy Springboard page at `proxy-p-mysql.<system domain>` contains links to each of the Proxy Dashboard pages.

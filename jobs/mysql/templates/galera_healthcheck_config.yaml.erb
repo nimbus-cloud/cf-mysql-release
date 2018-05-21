@@ -1,10 +1,12 @@
 ---
-Port: <%= p('healthcheck_port') %>
+Port: <%= p('cf_mysql.mysql.galera_healthcheck.port') %>
 PidFile: '/var/vcap/sys/run/galera-healthcheck/galera-healthcheck.pid'
 MysqldPath: '/var/vcap/packages/mariadb/bin/mysqld'
+MyCnfPath: '/var/vcap/jobs/mysql/config/my.cnf'
 DB:
-  User: <%= p('admin_username') %>
-  Password: <%= p('admin_password') %>
+  User: 'galera-healthcheck'
+  Password: '<%= p('cf_mysql.mysql.galera_healthcheck.db_password') %>'
+  Port: <%= p('cf_mysql.mysql.port') %>
 # This is the config that bosh sets up by default for monit.
 Monit:
   User: 'vcap'
@@ -13,6 +15,8 @@ Monit:
   Port: 2822
   MysqlStateFilePath: '/var/vcap/store/mysql/state.txt'
   ServiceName: 'mariadb_ctrl'
-BootstrapEndpoint:
-  Username: <%= p('bootstrap_endpoint.username') %>
-  Password: <%= p('bootstrap_endpoint.password') %>
+  BootstrapFilePath: '/var/vcap/jobs/mysql/bin/pre-start-execution'
+  BootstrapLogFilePath: '/var/vcap/sys/log/galera-healthcheck/pre-start-execution-during-bootstrap.stdout.log'
+SidecarEndpoint:
+  Username: <%= p('cf_mysql.mysql.galera_healthcheck.endpoint_username') %>
+  Password: <%= p('cf_mysql.mysql.galera_healthcheck.endpoint_password') %>
