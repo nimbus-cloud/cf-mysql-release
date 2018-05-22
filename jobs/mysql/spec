@@ -268,7 +268,6 @@ properties:
     default: 10
     description: 'Threshold in seconds above which SQL queries get logged in the slow query log file'
 
-<<<<<<< HEAD
   bootstrap_endpoint.username:
     description: 'Username used by the bootstrap endpoints for Basic Auth'
   bootstrap_endpoint.password:
@@ -286,5 +285,3 @@ properties:
     description: NFS server address to use for backup
   backups.nfs_server.export_dir:
     description: NFS server export dir for backups
-=======
->>>>>>> master
