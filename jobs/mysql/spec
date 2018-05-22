@@ -154,7 +154,6 @@ properties:
   cf_mysql.mysql.gcache_size:
     description: 'Cache size used by galera (maximum amount of data possible in an IST), in MB'
     default: 512
-<<<<<<< HEAD
   gmcast_segment:
     description: 'Datacentre identifier used by galera (0..255)'
     default: 0
@@ -162,9 +161,7 @@ properties:
     description: 'Node name prefix. Useful if defining a cluster over multiple boshes'
     default: mysql
   ib_log_file_size:
-=======
   cf_mysql.mysql.ib_log_file_size:
->>>>>>> master
     description: 'Size of the ib_log_file used by innodb, in MB'
     default: 1024
   cf_mysql.mysql.seeded_databases:
