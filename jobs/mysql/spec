@@ -15,7 +15,7 @@ templates:
   get-sequence-number.sh: bin/get-sequence-number
   gra-log-purger_ctl.erb: bin/gra-log-purger_ctl
   gra-log-purger.sh.erb: bin/gra-log-purger.sh
-  syslog_forwarder.conf.erb: config/syslog_forwarder.conf
+  #syslog_forwarder.conf.erb: config/syslog_forwarder.conf
   mariadb_backup.cron.erb: config/mariadb_backup.cron
   mariadb_backup.erb: bin/mariadb_backup
   mariadb_backup.sh.erb: bin/mariadb_backup.sh
