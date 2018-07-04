@@ -285,3 +285,6 @@ properties:
     description: NFS server address to use for backup
   backups.nfs_server.export_dir:
     description: NFS server export dir for backups
+
+  cf_mysql.mysql.cluster_ips:
+    description: Pulling in the IPs from both datacentres

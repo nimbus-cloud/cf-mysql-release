@@ -73,16 +73,6 @@ wsrep_max_ws_size=<%= p('wsrep_max_ws_size') %>
 # Upstream changes HEAD below
 
 wsrep_on                        = ON
-#wsrep_provider                  = /var/vcap/packages/mariadb/lib/plugin/libgalera_smm.so
-#wsrep_provider_options          = "gcache.size=<%= p('cf_mysql.mysql.gcache_size') %>M;pc.recovery=FALSE;pc.checksum=TRUE"
-#wsrep_cluster_address           = gcomm://<%= cluster_ips.join(",") %>
-#wsrep_node_address              = <%= node_host %>:<%= p('cf_mysql.mysql.galera_port') %>
-#wsrep_node_name                 = <%= name %>/<%= index %>
-#wsrep_cluster_name              = <%= p('cf_mysql.mysql.cluster_name') %>
-#wsrep_sst_method                = xtrabackup-v2
-wsrep_sst_auth                  = <%= p('cf_mysql.mysql.admin_username')%>:<%= p('cf_mysql.mysql.admin_password') %>
-#wsrep_max_ws_rows               = <%= p('cf_mysql.mysql.wsrep_max_ws_rows') %>
-#wsrep_max_ws_size               = <%= p('cf_mysql.mysql.wsrep_max_ws_size') %>
 wsrep_load_data_splitting       = ON
 wsrep_replicate_myisam          = OFF
 <% if p('cf_mysql.mysql.log_conflicts') %>

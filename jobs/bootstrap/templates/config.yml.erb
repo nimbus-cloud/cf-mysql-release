@@ -1,6 +1,7 @@
 <%=
   mysql_link = link('mysql')
-  cluster_ips = mysql_link.instances.map { |instance| instance.address }
+  #cluster_ips = mysql_link.instances.map { |instance| instance.address }
+  cluster_ips = p('cf_mysql.mysql.cluster_ips')
   if_link('arbitrator') do |arb|
     cluster_ips += arb.instances.map { |instance| instance.address }
   end
