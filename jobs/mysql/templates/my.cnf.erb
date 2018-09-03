@@ -1,10 +1,10 @@
 <%
   base_folder = '/var/vcap/sys/run/mysql'
 
-  cluster_ips = link('mysql').instances.map { |instance| instance.address }
-  if_link('arbitrator') do
-    cluster_ips += link('arbitrator').instances.map { |instance| instance.address }
-  end
+  # cluster_ips = link('mysql').instances.map { |instance| instance.address }
+  # if_link('arbitrator') do
+  #   cluster_ips += link('arbitrator').instances.map { |instance| instance.address }
+  # end
 
   def discover_external_ip
     networks = spec.networks.marshal_dump
@@ -59,7 +59,7 @@ nice                            = 0
 wsrep_on                        = ON
 wsrep_provider                  = /var/vcap/packages/mariadb/lib/plugin/libgalera_smm.so
 wsrep_provider_options          = "gcache.size=<%= p('cf_mysql.mysql.gcache_size') %>M;pc.recovery=FALSE;pc.checksum=TRUE"
-wsrep_cluster_address           = gcomm://<%= cluster_ips.join(",") %>
+wsrep_cluster_address           = gcomm://<%= p('cluster_ips') %>
 wsrep_node_address              = <%= node_host %>:<%= p('cf_mysql.mysql.galera_port') %>
 wsrep_node_name                 = <%= name %>/<%= index %>
 wsrep_cluster_name              = <%= p('cf_mysql.mysql.cluster_name') %>
