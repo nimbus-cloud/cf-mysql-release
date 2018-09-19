@@ -193,8 +193,14 @@ properties:
     default: 30
   cf_mysql.mysql.cluster_health.password:
     description: 'Password for the cluster logger health user'
-  cf_mysql.mysql.cluster_ips:
-    description: 'IP addresses of cluster'
+  cf_mysql.mysql.mysql_cluster:
+    description: 'IP addresses of mysql nodes'
+  cf_mysql.mysql.cluster_address_list:
+    description: 'String list of mysql nodes for wsrep_cluster_address in my.cnf.erb'
+  cf_mysql.mysql.mysql_arbitrator:
+    description: 'IP addresse of mysql arbitrator'
+  cf_mysql.mysql.environment:
+    description: 'Environment so nodes across deployements do not have the same name'
 
   cf_mysql.mysql.galera_healthcheck.endpoint_username:
     description: 'Username used by the sidecar endpoints for Basic Auth'

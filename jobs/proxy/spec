@@ -42,6 +42,11 @@ properties:
     description: 'Port galera_healthcheck sidecar process listens on'
     default: 9200
 
+
+  cf_mysql.proxy.mysql_cluster:
+    description: 'IP addresses of mysql nodes'
+  cf_mysql.proxy.mysql_arbitrator:
+    description: 'IP addresse of mysql arbitrator'
   cf_mysql.proxy.port:
     description: "Port for the proxy to listen on"
     default: 3306

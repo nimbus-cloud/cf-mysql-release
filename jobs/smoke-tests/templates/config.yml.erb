@@ -81,7 +81,9 @@ standalone_tests_only = p('cf_mysql.smoke_tests.standalone_tests_only')
 config[:standalone_only] = standalone_tests_only
 
 if standalone_tests_only
-  cluster_ips = link('mysql').instances.map { |instance| instance.address }
+  # cluster_ips = link('mysql').instances.map { |instance| instance.address }
+
+  cluster_ips = p('cf_mysql.mysql.mysql_cluster')
 
   mysql_host = nil
   if_p('cf_mysql.host') do |host|

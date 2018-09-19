@@ -1,7 +1,9 @@
 <%
-  cluster_ips = []
-  cluster_ips = link('mysql').instances.map { |instance| instance.address }
-  cluster_ips += link('arbitrator').instances.map { |instance| instance.address }
+  # cluster_ips = []
+  # cluster_ips = link('mysql').instances.map { |instance| instance.address }
+  # cluster_ips += link('arbitrator').instances.map { |instance| instance.address }
+  cluster_ips = p('cf_mysql.mysql.mysql_cluster')
+  cluster_ips += p('cf_mysql.mysql.mysql_arbitrator')
 %>
 
 group = cf-mariadb-galera-cluster

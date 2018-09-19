@@ -17,11 +17,13 @@ def discover_external_ip
 %>
 
 <%
-  cluster_ips = link('mysql').instances.map(&:address)
+  #cluster_ips = link('mysql').instances.map(&:address)
+  # if_link('arbitrator') do
+  #   cluster_ips += link('arbitrator').instances.map(&:address)
+  # end
 
-  if_link('arbitrator') do
-    cluster_ips += link('arbitrator').instances.map(&:address)
-  end
+  cluster_ips = p('cf_mysql.mysql.mysql_cluster')
+  cluster_ips += p('cf_mysql.mysql.mysql_arbitrator')
 %>
 
 LogFileLocation: /var/vcap/sys/log/mysql/mariadb_ctrl.combined.log

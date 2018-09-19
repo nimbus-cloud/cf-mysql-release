@@ -33,6 +33,12 @@ properties:
   cf_mysql.mysql.port:
     description: 'Port the mysql server should bind to'
     default: 3306
+    
+  cf_mysql.mysql.mysql_cluster:
+    description: 'IP addresses of mysql nodes'
+  cf_mysql.mysql.mysql_arbitrator:
+    description: 'IP addresse of mysql arbitrator'
+
   cf_mysql.mysql.galera_port:
     description: 'Port which garbd listens on'
     default: 4567
