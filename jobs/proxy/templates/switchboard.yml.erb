@@ -1,5 +1,5 @@
 <%=
-  cluster_ips = link('mysql').instances.map { |instance| instance.address }
+  cluster_ips = p('cf_mysql.mysql.cluster_ips') 
   galera_healthcheck_port = link('mysql').p('cf_mysql.mysql.galera_healthcheck.port')
   mysql_port = link('mysql').p('cf_mysql.mysql.port')
 

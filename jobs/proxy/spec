@@ -101,3 +101,7 @@ properties:
       E.g., if your LB polls every 30 seconds, and immediately fails over upon failure,
       then set this property to 30 seconds.
     default: 0
+
+### ADDED
+  cf_mysql.mysql.cluster_ips:
+    description: 'IP addresses of the mysql nodes'

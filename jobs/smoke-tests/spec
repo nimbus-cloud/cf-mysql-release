@@ -86,3 +86,7 @@ properties:
   cf_mysql.proxy.api_force_https:
     description: 'Expect proxy to force redirect to HTTPS'
     default: true
+
+### ADDED
+  cf_mysql.mysql.cluster_ips:
+    description: 'IP addresses of the mysql nodes'

@@ -44,3 +44,10 @@ properties:
   cf_mysql.mysql.galera_healthcheck.port:
     description: 'Port used by sidecar process to listen on'
     default: 9200
+
+#### ADDED
+  cf_mysql.mysql.cluster_ips:
+    description: 'IP addresses of the mysql nodes'
+
+  cf_mysql.mysql.arbitrator_ips:
+    description: 'IP address of the arbitrator'

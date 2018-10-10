@@ -266,3 +266,13 @@ properties:
     default: true 
     description: 'Enables usage of bootsrap procedure'
 
+#### ADDED
+  cf_mysql.mysql.cluster_ips:
+    description: 'IP addresses of the mysql nodes'
+
+  cf_mysql.mysql.arbitrator_ips:
+    description: 'IP address of the arbitrator'
+
+  cf_mysql.mysql.wsrep_cluster_address_string:
+    description: 'String for wsrep cluster. Contains nodes and arbitrator.'
+
