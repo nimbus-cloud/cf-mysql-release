@@ -12,6 +12,15 @@
 
 
 <a name='differences'></a>
+## Differences from master Cloud Foundry release
+
+Check the jobs spec file for differences with master. The main difference is that to allow for cross DC clusters you need to provide a list of all IP's in the cluster prior to deployment. As it currently stands, this cannot be done dynamically.
+
+You also need to provide a list of arbitrator nodes for use in the arbitrator job. This list is appended to the data node cluster_ips array within the mysql config.
+
+As we have 2 BOSH directors, as it currently stands, you need to deploy one at a time to each director. The nodes will automatically join the cluster.
+
+wsrep_cluster_address_string must be provided in your deployment and must be whitespace free due to how the MySQL config is parsed. This could probably be done in the release itself and create a whitespace free list from cluster_ips and arbitrator_node.
 
 <a name='components'></a>
 ## Components
