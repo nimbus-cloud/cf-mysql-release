@@ -2,50 +2,22 @@
 
 ### Table of contents
 
-[Components](#components)
+[Differences from master Cloud Foundry release](#differences)
 
-[Downloading a Stable Release](#downloading-a-stable-release)
+[Components](#components)
 
 [Development](#development)
 
 [Release notes & known issues](#release-notes)
 
-[Deploying](#deploying)
 
-[Registering the Service Broker](#registering-broker)
-
-[Security Groups](#security-groups)
-
-[Smoke Tests](#smoke-tests)
-
-[Deregistering the Service Broker](#deregistering-broker)
-
-[CI](http://www.github.com/cloudfoundry-incubator/cf-mysql-ci)
+<a name='differences'></a>
 
 <a name='components'></a>
 ## Components
 
 A BOSH release of a MySQL database-as-a-service for Cloud Foundry using [MariaDB Galera Cluster](https://mariadb.com/kb/en/mariadb/documentation/replication-cluster-multi-master/galera/what-is-mariadb-galera-cluster/) and a [v2 Service Broker](http://docs.cloudfoundry.org/services/).
 
-<table>
-  <tr>
-      <th>Component</th><th>Description</th>
-  </tr>
-  <tr>
-    <td><a href="https://github.com/cloudfoundry/cf-mysql-broker">CF MySQL Broker</a></td>
-    <td>Advertises the MySQL service and plans.  Creates and deletes MySQL databases and
-    credentials (bindings) at the request of Cloud Foundry's Cloud Controller.
-    </td>
-   </tr>
-   <tr>
-     <td>MySQL Server</td>
-     <td>The MySQL instances, either single or 3-node cluster. Currently using MariaDB 10 (versions vary by release).</td>
-   </tr>
-      <tr>
-     <td>Proxy</td>
-     <td><a href="https://github.com/cloudfoundry-incubator/switchboard">Switchboard</a>; proxies to MySQL, severing connections on MySQL node failure.</td>
-   </tr>
-</table>
 
 <a name='proxy'></a>
 ### Proxy
@@ -120,13 +92,6 @@ Connecting to the broker directly on `https` will result in a `port 443: Connect
 By default, the broker will not trust a self-signed SSL certificate when communicating with cf-release.
 To trust self-signed SSL certificates, you can change `jobs.cf-mysql-broker.skip_ssl_validation` to `true`.
 
-<a name='downloading-a-stable-release'></a>
-## Downloading a Stable Release
-
-Stable releases, also known as final releases, are available for general use. Release notes and source code are available on [github](https://github.com/cloudfoundry/cf-mysql-release/releases).
-Instructions for uploading a final release to your BOSH director can be found on [bosh.io](https://bosh.io/releases/github.com/cloudfoundry/cf-mysql-release).
-
-**Note:** If your BOSH director's able to access the Internet, you don't need to download and upload a release to your BOSH director. When using [cf-mysql-deployment](https://github.com/cloudfoundry/cf-mysql-deployment), the correct release is referenced in the manifest, and will be automatically retrieved by the BOSH director.
 
 <a name='development'></a>
 ## Development
