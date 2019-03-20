@@ -2,7 +2,6 @@ set -e -x
 
 pushd ${BUILD_DIR}/cf-mysql-broker
   rm -rf ./vendor/cache/
-  gem install bundler
   set +e
   for i in {1..3}; do
     bundle config --local specific_platform true
