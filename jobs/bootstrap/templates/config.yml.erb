@@ -4,6 +4,9 @@
   if_link('arbitrator') do |arb|
     cluster_ips += arb.instances.map { |instance| instance.address }
   end
+  if_p('cf_mysql.mysql.xtra_cluster_ips') do
+      cluster_ips += p('cf_mysql.mysql.xtra_cluster_ips')
+  end
   galera_healthcheck_port = mysql_link.p('cf_mysql.mysql.galera_healthcheck.port')
   galera_healthcheck_username = mysql_link.p('cf_mysql.mysql.galera_healthcheck.endpoint_username')
   galera_healthcheck_password = mysql_link.p('cf_mysql.mysql.galera_healthcheck.endpoint_password')
