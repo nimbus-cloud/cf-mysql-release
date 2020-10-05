@@ -23,3 +23,8 @@ properties:
     default: galera-healthcheck
   cf_mysql.mysql.galera_healthcheck.endpoint_password:
     description: 'Password used to contact the sidecar endpoints via Basic Auth'
+  cf_mysql.mysql.xtra_cluster_ips:
+    description: 'additional cluster IPs that are not part of the deployment'
+    example: |
+      - 10.0.0.1
+      - 10.0.0.2
